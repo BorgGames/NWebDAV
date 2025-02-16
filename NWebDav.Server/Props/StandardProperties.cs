@@ -1,5 +1,4 @@
 ﻿using System.Xml.Linq;
-using Microsoft.AspNetCore.Http;
 using NWebDav.Server.Stores;
 
 namespace NWebDav.Server.Props;
@@ -25,7 +24,7 @@ public class DavCreationDate<TEntry> : DavIso8601Date<TEntry> where TEntry : ISt
     // ReSharper disable once StaticMemberInGenericType
     public static readonly XName PropertyName = WebDavNamespaces.DavNs + "creationdate";
 
-    public DavCreationDate(IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
+    public DavCreationDate() : base()
     {}
 
     /// <summary>

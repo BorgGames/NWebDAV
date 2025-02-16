@@ -13,14 +13,14 @@ internal class AzureContainerCollectionPropertyManager : PropertyManager<AzureCo
 {
     private static readonly XElement s_xDavCollection = new(WebDavNamespaces.DavNs + "collection");
         
-    public AzureContainerCollectionPropertyManager(IHttpContextAccessor httpContextAccessor, ILockingManager lockingManager) : base(GetProperties(httpContextAccessor, lockingManager))
+    public AzureContainerCollectionPropertyManager(ILockingManager lockingManager) : base(GetProperties(lockingManager))
     {
     }
 
-    private static DavProperty<AzureContainerCollection>[] GetProperties(IHttpContextAccessor httpContextAccessor, ILockingManager lockingManager) => new DavProperty<AzureContainerCollection>[]
+    private static DavProperty<AzureContainerCollection>[] GetProperties(ILockingManager lockingManager) => new DavProperty<AzureContainerCollection>[]
     {
         // RFC-2518 properties
-        new DavCreationDate<AzureContainerCollection>(httpContextAccessor)
+        new DavCreationDate<AzureContainerCollection>()
         {
             Getter = _ => DateTime.UnixEpoch,
         },

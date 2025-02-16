@@ -11,14 +11,14 @@ public class DiskStoreCollectionPropertyManager : PropertyManager<DiskStoreColle
 {
     private static readonly XElement s_xDavCollection = new(WebDavNamespaces.DavNs + "collection");
         
-    public DiskStoreCollectionPropertyManager(IHttpContextAccessor httpContextAccessor, ILockingManager lockingManager) : base(GetProperties(httpContextAccessor, lockingManager))
+    public DiskStoreCollectionPropertyManager(ILockingManager lockingManager) : base(GetProperties(lockingManager))
     {
     }
 
-    private static DavProperty<DiskStoreCollection>[] GetProperties(IHttpContextAccessor httpContextAccessor, ILockingManager lockingManager) => new DavProperty<DiskStoreCollection>[]
+    private static DavProperty<DiskStoreCollection>[] GetProperties(ILockingManager lockingManager) => new DavProperty<DiskStoreCollection>[]
     {
         // RFC-2518 properties
-        new DavCreationDate<DiskStoreCollection>(httpContextAccessor)
+        new DavCreationDate<DiskStoreCollection>()
         {
             Getter = collection => collection.DirectoryInfo.CreationTimeUtc,
             Setter = (collection, value) =>

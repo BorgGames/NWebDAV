@@ -188,18 +188,16 @@ public abstract class DavIso8601Date<TEntry> : DavTypedProperty<TEntry, DateTime
 {
     private readonly Iso8601DateConverter _converter;
         
-    protected DavIso8601Date(IHttpContextAccessor httpContextAccessor)
+    protected DavIso8601Date()
     {
-        _converter = new Iso8601DateConverter(httpContextAccessor);
+        _converter = Iso8601DateConverter.Instance;
     }
         
     private class Iso8601DateConverter : IConverter
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
-        public Iso8601DateConverter(IHttpContextAccessor httpContextAccessor)
+        internal static readonly Iso8601DateConverter Instance = new();
+        Iso8601DateConverter()
         {
-            _httpContextAccessor = httpContextAccessor;
         }
             
         public object ToXml(DateTime value)
@@ -207,28 +205,17 @@ public abstract class DavIso8601Date<TEntry> : DavTypedProperty<TEntry, DateTime
             // The older built-in Windows WebDAV clients have a problem, so
             // they cannot deal with more than 3 digits for the
             // milliseconds.
-            if (HasIso8601FractionBug)
-            {
-                // We need to recreate the date again, because the Windows 7
-                // WebDAV client cannot 
-                var dt = new DateTime(value.Year, value.Month, value.Day, value.Hour, value.Minute, value.Second, value.Millisecond, DateTimeKind.Utc);
-                return XmlConvert.ToString(dt, XmlDateTimeSerializationMode.Utc);
-            }
 
-            return XmlConvert.ToString(value, XmlDateTimeSerializationMode.Utc);
+            // P.S. I think the previous comment meant "less than 3 digits".
+
+            // We need to recreate the date again, because the Windows 7
+            // WebDAV client cannot 
+            var dt = new DateTime(value.Year, value.Month, value.Day, value.Hour, value.Minute, value.Second, value.Millisecond, DateTimeKind.Utc);
+            return XmlConvert.ToString(dt, XmlDateTimeSerializationMode.Utc);
         }
 
         public DateTime FromXml(object value) => XmlConvert.ToDateTime((string)value, XmlDateTimeSerializationMode.Utc);
 
-        private bool HasIso8601FractionBug
-        {
-            get
-            {
-                var userAgent = _httpContextAccessor.HttpContext?.Request.Headers.UserAgent.FirstOrDefault();
-                _ = userAgent;  // TODO: Determine if this bug is present based on the user-agent
-                return true;
-            }
-        }
     }
 
     /// <summary>

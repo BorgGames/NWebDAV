@@ -7,14 +7,14 @@ namespace NWebDav.Sample.AzureBlob.AzureBlob;
 
 internal class AzureBlobItemPropertyManager : PropertyManager<AzureBlobItem>
 {
-    public AzureBlobItemPropertyManager(IHttpContextAccessor httpContextAccessor, ILockingManager lockingManager) : base(GetProperties(httpContextAccessor, lockingManager))
+    public AzureBlobItemPropertyManager(ILockingManager lockingManager) : base(GetProperties(lockingManager))
     {
     }
 
-    private static DavProperty<AzureBlobItem>[] GetProperties(IHttpContextAccessor httpContextAccessor, ILockingManager lockingManager) => new DavProperty<AzureBlobItem>[]
+    private static DavProperty<AzureBlobItem>[] GetProperties(ILockingManager lockingManager) => new DavProperty<AzureBlobItem>[]
     {
         // RFC-2518 properties
-        new DavCreationDate<AzureBlobItem>(httpContextAccessor)
+        new DavCreationDate<AzureBlobItem>()
         {
             Getter = item => item.StoreItemMetadata.CreatedOn,
         },

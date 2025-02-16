@@ -11,14 +11,14 @@ namespace NWebDav.Server.Stores;
 
 public class DiskStoreItemPropertyManager : PropertyManager<DiskStoreItem>
 {
-    public DiskStoreItemPropertyManager(IHttpContextAccessor httpContextAccessor, ILockingManager lockingManager) : base(GetProperties(httpContextAccessor, lockingManager))
+    public DiskStoreItemPropertyManager(ILockingManager lockingManager) : base(GetProperties(lockingManager))
     {
     }
 
-    private static DavProperty<DiskStoreItem>[] GetProperties(IHttpContextAccessor httpContextAccessor, ILockingManager lockingManager) => new DavProperty<DiskStoreItem>[]
+    private static DavProperty<DiskStoreItem>[] GetProperties(ILockingManager lockingManager) => new DavProperty<DiskStoreItem>[]
     {
         // RFC-2518 properties
-        new DavCreationDate<DiskStoreItem>(httpContextAccessor)
+        new DavCreationDate<DiskStoreItem>()
         {
             Getter = item => item.FileInfo.CreationTimeUtc,
             Setter = (item, value) =>

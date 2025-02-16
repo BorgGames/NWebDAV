@@ -12,14 +12,14 @@ internal class AzureBlobCollectionPropertyManager : PropertyManager<AzureBlobCol
 {
     private static readonly XElement s_xDavCollection = new(WebDavNamespaces.DavNs + "collection");
         
-    public AzureBlobCollectionPropertyManager(IHttpContextAccessor httpContextAccessor, ILockingManager lockingManager) : base(GetProperties(httpContextAccessor, lockingManager))
+    public AzureBlobCollectionPropertyManager(ILockingManager lockingManager) : base(GetProperties(lockingManager))
     {
     }
 
-    private static DavProperty<AzureBlobCollection>[] GetProperties(IHttpContextAccessor httpContextAccessor, ILockingManager lockingManager) => new DavProperty<AzureBlobCollection>[]
+    private static DavProperty<AzureBlobCollection>[] GetProperties(ILockingManager lockingManager) => new DavProperty<AzureBlobCollection>[]
     {
         // RFC-2518 properties
-        new DavCreationDate<AzureBlobCollection>(httpContextAccessor)
+        new DavCreationDate<AzureBlobCollection>()
         {
             Getter = collection => collection.StoreItemMetadata.CreatedOn,
         },
